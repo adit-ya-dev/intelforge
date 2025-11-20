@@ -17,7 +17,6 @@ export default function IndexControls() {
       id: 'reindex',
       name: 'Reindex Documents',
       description: 'Rebuild search index for all documents',
-      icon: '🔄',
       estimatedTime: '1-2 hours',
       impact: 'low'
     },
@@ -25,7 +24,6 @@ export default function IndexControls() {
       id: 'rebuild_embeddings',
       name: 'Rebuild Embeddings',
       description: 'Regenerate vector embeddings for semantic search',
-      icon: '🧮',
       estimatedTime: '3-4 hours',
       impact: 'medium'
     },
@@ -33,7 +31,6 @@ export default function IndexControls() {
       id: 'purge',
       name: 'Purge Stale Data',
       description: 'Remove outdated or orphaned documents',
-      icon: '🗑️',
       estimatedTime: '30 minutes',
       impact: 'high'
     },
@@ -41,7 +38,6 @@ export default function IndexControls() {
       id: 'optimize',
       name: 'Optimize Index',
       description: 'Defragment and optimize search performance',
-      icon: '⚡',
       estimatedTime: '15 minutes',
       impact: 'low'
     }
@@ -81,7 +77,7 @@ export default function IndexControls() {
           ? { 
               ...op, 
               progress, 
-              status: progress >= 100 ? 'completed' : 'running' as any,
+              status: (progress >= 100 ? 'completed' : 'running') as any,
               affectedDocuments: Math.floor(progress * 500),
               estimatedTimeRemaining: Math.max(0, 1800 - (progress * 18))
             }
@@ -117,6 +113,49 @@ export default function IndexControls() {
     return `${minutes}m`;
   };
 
+  function renderIcon(opId: string) {
+    // small, neutral-styled SVG icons (no emoji)
+    switch (opId) {
+      case 'reindex':
+        return (
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M21 12a9 9 0 10-9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M21 3v6h-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        );
+      case 'rebuild_embeddings':
+        return (
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <rect x="3" y="3" width="7" height="7" stroke="currentColor" strokeWidth="1.4" />
+            <rect x="14" y="3" width="7" height="7" stroke="currentColor" strokeWidth="1.4" />
+            <rect x="3" y="14" width="7" height="7" stroke="currentColor" strokeWidth="1.4" />
+            <rect x="14" y="14" width="7" height="7" stroke="currentColor" strokeWidth="1.4" />
+          </svg>
+        );
+      case 'purge':
+        return (
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M3 6h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <path d="M8 6v12a2 2 0 002 2h4a2 2 0 002-2V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M10 11v6M14 11v6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        );
+      case 'optimize':
+        return (
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.3" />
+          </svg>
+        );
+      default:
+        return (
+          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.2" />
+          </svg>
+        );
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Operation Controls */}
@@ -131,7 +170,9 @@ export default function IndexControls() {
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-start gap-3">
-                  <span className="text-3xl">{operation.icon}</span>
+                  <div className="w-10 h-10 rounded-md bg-muted/10 flex items-center justify-center text-white">
+                    {renderIcon(operation.id)}
+                  </div>
                   <div className="flex-1">
                     <h3 className="font-medium text-white">{operation.name}</h3>
                     <p className="text-sm text-muted-foreground mt-1">{operation.description}</p>

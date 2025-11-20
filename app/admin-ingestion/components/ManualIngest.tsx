@@ -46,7 +46,7 @@ export default function ManualIngest() {
     const newUpload: DocumentUpload = {
       id: `upload-${Date.now()}`,
       fileName: selectedFile.name,
-      fileType: selectedFile.name.split('.').pop() as any,
+      fileType: (selectedFile.name.split('.').pop() || '') as any,
       fileSize: selectedFile.size,
       uploadDate: new Date(),
       status: 'uploading',
@@ -97,15 +97,79 @@ export default function ManualIngest() {
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   };
 
-  const getFileIcon = (type: string) => {
-    switch (type) {
-      case 'pdf': return '📄';
-      case 'csv': return '📊';
-      case 'json': return '🔧';
-      case 'xml': return '📋';
-      default: return '📎';
+  function renderFileIcon(type: string | undefined) {
+    switch ((type || '').toLowerCase()) {
+      case 'pdf':
+        return (
+          <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <rect x="3" y="3" width="14" height="18" rx="2" stroke="currentColor" strokeWidth="1.4" />
+            <path d="M7 7h6M7 11h6M7 15h6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+            <rect x="17" y="7" width="4" height="4" rx="1" stroke="currentColor" strokeWidth="1.2" />
+          </svg>
+        );
+      case 'csv':
+        return (
+          <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.2" />
+            <path d="M7 8h10M7 12h10M7 16h10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        );
+      case 'json':
+        return (
+          <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M8 7l-3 5 3 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M16 7l3 5-3 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M12 5v14" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        );
+      case 'xml':
+        return (
+          <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M8 7l-3 5 3 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M16 7l3 5-3 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M12 5v14" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        );
+      default:
+        return (
+          <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M12 3v12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+            <path d="M20 21H4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+            <path d="M16 7l-4-4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        );
     }
-  };
+  }
+
+  function UploadIconLarge() {
+    return (
+      <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M16 16v4H8v-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 3v12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M20 16a4 4 0 00-4-4h-1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M8 12a4 4 0 00-4 4v0" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  function RocketIconSmall() {
+    return (
+      <svg className="w-4 h-4 inline-block" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M12 2s4 1 6 3 3 6 3 6-3 1-6 3-6 1-6 1-1-4 1-6S12 2 12 2z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M7 17s-1 3-3 4l1-3 2-1z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+
+  function WarningInline() {
+    return (
+      <svg className="w-4 h-4 inline-block mr-2 text-red-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h17.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 9v4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 17h.01" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -124,7 +188,9 @@ export default function ManualIngest() {
             onDrop={handleDrop}
           >
             <div className="flex flex-col items-center gap-4">
-              <div className="text-6xl">📤</div>
+              <div className="text-6xl">
+                <UploadIconLarge />
+              </div>
               <div>
                 <p className="text-lg font-medium text-white">Drop files here or click to browse</p>
                 <p className="text-sm text-muted-foreground mt-1">
@@ -152,7 +218,9 @@ export default function ManualIngest() {
             <div className="bg-background border border-border rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl">{getFileIcon(selectedFile?.name.split('.').pop() || '')}</span>
+                  <div className="w-12 h-12 rounded-md bg-muted/10 flex items-center justify-center text-white">
+                    {renderFileIcon(selectedFile?.name.split('.').pop())}
+                  </div>
                   <div>
                     <p className="font-medium text-white">{selectedFile?.name}</p>
                     <p className="text-sm text-muted-foreground">
@@ -166,6 +234,7 @@ export default function ManualIngest() {
                     setSelectedFile(null);
                   }}
                   className="p-2 text-red-400 hover:text-red-300 transition-colors"
+                  aria-label="Close file"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -238,6 +307,7 @@ export default function ManualIngest() {
                         <button
                           onClick={() => removeFieldMapping(index)}
                           className="p-2 text-red-400 hover:text-red-300 transition-colors"
+                          aria-label={`Remove mapping ${index + 1}`}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -265,8 +335,8 @@ export default function ManualIngest() {
                 onClick={handleUpload}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
               >
-                <span>🚀</span>
-                Start Processing
+                <RocketIconSmall />
+                <span>Start Processing</span>
               </button>
             </div>
           </div>
@@ -282,7 +352,9 @@ export default function ManualIngest() {
             <div key={upload.id} className="bg-background border border-border rounded-lg p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">{getFileIcon(upload.fileType)}</span>
+                  <div className="w-10 h-10 rounded-md bg-muted/10 flex items-center justify-center text-white">
+                    {renderFileIcon(upload.fileType)}
+                  </div>
                   <div>
                     <p className="font-medium text-white">{upload.fileName}</p>
                     <p className="text-sm text-muted-foreground">
@@ -330,7 +402,10 @@ export default function ManualIngest() {
               {upload.errors && upload.errors.length > 0 && (
                 <div className="mt-3 p-2 bg-red-500/10 border border-red-500/30 rounded">
                   {upload.errors.map((error, idx) => (
-                    <p key={idx} className="text-xs text-red-400">⚠️ {error}</p>
+                    <p key={idx} className="text-xs text-red-400 flex items-center gap-2">
+                      <WarningInline />
+                      <span>{error}</span>
+                    </p>
                   ))}
                 </div>
               )}

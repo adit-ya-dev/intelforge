@@ -2,10 +2,20 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { mockPipelineRuns, mockThroughputData } from '@/lib/admin-ingestion-mock-data';
 import { PipelineRun, ThroughputData } from '@/types/admin-ingestion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+
+function WarningInline() {
+  return (
+    <svg className="w-4 h-4 inline-block mr-2 text-red-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h17.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 9v4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M12 17h.01" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 export default function PipelineDashboard() {
   const [runs] = useState<PipelineRun[]>(mockPipelineRuns);
@@ -125,7 +135,10 @@ export default function PipelineDashboard() {
               {run.errorMessages.length > 0 && (
                 <div className="mt-3 p-2 bg-red-500/10 border border-red-500/30 rounded-lg">
                   {run.errorMessages.map((error, idx) => (
-                    <p key={idx} className="text-xs text-red-400">⚠️ {error}</p>
+                    <p key={idx} className="text-xs text-red-400 flex items-center">
+                      <WarningInline />
+                      <span>{error}</span>
+                    </p>
                   ))}
                 </div>
               )}

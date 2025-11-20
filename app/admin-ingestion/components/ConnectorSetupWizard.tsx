@@ -11,6 +11,16 @@ interface ConnectorSetupWizardProps {
   onClose: () => void;
 }
 
+function InfoIconSmall() {
+  return (
+    <svg className="w-4 h-4 inline-block mr-2" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M12 9v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M12 17h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
 export default function ConnectorSetupWizard({ templateId, onClose }: ConnectorSetupWizardProps) {
   const [step, setStep] = useState(1);
   const [selectedTemplate, setSelectedTemplate] = useState<ConnectorTemplate | null>(
@@ -51,6 +61,7 @@ export default function ConnectorSetupWizard({ templateId, onClose }: ConnectorS
             <button
               onClick={onClose}
               className="p-2 text-muted-foreground hover:text-white transition-colors"
+              aria-label="Close"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -242,9 +253,10 @@ export default function ConnectorSetupWizard({ templateId, onClose }: ConnectorS
                 )}
               </div>
 
-              <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+              <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg flex items-start">
+                <InfoIconSmall />
                 <p className="text-sm text-blue-400">
-                  ℹ️ The connector will start syncing data immediately after creation
+                  The connector will start syncing data immediately after creation
                 </p>
               </div>
             </div>

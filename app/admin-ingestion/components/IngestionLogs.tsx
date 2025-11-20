@@ -10,6 +10,57 @@ interface IngestionLogsProps {
   limit?: number;
 }
 
+function renderLevelIcon(level: string) {
+  switch (level) {
+    case 'info':
+      return (
+        <svg className="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.4" />
+          <path d="M11.25 10.5h1.5v5.25h-1.5zM12 8.25h.01" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'warning':
+      return (
+        <svg className="w-5 h-5 text-yellow-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h17.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M12 9v4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M12 17h.01" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    case 'error':
+      return (
+        <svg className="w-5 h-5 text-red-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.4" />
+          <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      );
+    default:
+      return (
+        <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.2" />
+          <path d="M8 8h8M8 12h6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+        </svg>
+      );
+  }
+}
+
+function RefreshIcon() {
+  return (
+    <svg className="w-4 h-4 inline-block mr-2" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M20 12a8 8 0 10-15.5 3.5L3 20" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M21 15v6h-6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function PauseIcon() {
+  return (
+    <svg className="w-4 h-4 inline-block mr-2" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M6 5h3v14H6zM15 5h3v14h-3z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export default function IngestionLogs({ limit }: IngestionLogsProps) {
   const [logs, setLogs] = useState<IngestionLog[]>(mockIngestionLogs);
   const [filterLevel, setFilterLevel] = useState<string>('all');
@@ -60,15 +111,6 @@ export default function IngestionLogs({ limit }: IngestionLogsProps) {
     }
   };
 
-  const getLevelIcon = (level: string) => {
-    switch (level) {
-      case 'info': return 'ℹ️';
-      case 'warning': return '⚠️';
-      case 'error': return '❌';
-      default: return '📝';
-    }
-  };
-
   const handleRetry = (logId: string) => {
     console.log('Retrying operation for log:', logId);
   };
@@ -101,13 +143,16 @@ export default function IngestionLogs({ limit }: IngestionLogsProps) {
               </select>
               <button
                 onClick={() => setAutoRefresh(!autoRefresh)}
-                className={`px-3 py-1 text-sm border rounded transition-colors ${
+                className={`px-3 py-1 text-sm border rounded transition-colors flex items-center ${
                   autoRefresh
                     ? 'bg-green-500/20 text-green-400 border-green-500/50 hover:bg-green-500/30'
                     : 'bg-gray-500/20 text-gray-400 border-gray-500/50 hover:bg-gray-500/30'
                 }`}
+                aria-pressed={autoRefresh}
+                aria-label={autoRefresh ? 'Auto refresh enabled' : 'Auto refresh paused'}
               >
-                {autoRefresh ? '🔄 Auto' : '⏸️ Paused'}
+                {autoRefresh ? <RefreshIcon /> : <PauseIcon />}
+                {autoRefresh ? 'Auto' : 'Paused'}
               </button>
             </>
           )}
@@ -127,7 +172,7 @@ export default function IngestionLogs({ limit }: IngestionLogsProps) {
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-3 flex-1">
-                <span className="text-lg mt-0.5">{getLevelIcon(log.level)}</span>
+                <span className="mt-0.5">{renderLevelIcon(log.level)}</span>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-1">
                     <span className={`text-xs font-medium ${getLevelColor(log.level)}`}>

@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { 
   AlertCircle, 
   BarChart3, 
@@ -85,33 +86,39 @@ const items = [
 ]
 
 export function AppSidebar() {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme, resolvedTheme } = useTheme()
   const { state } = useSidebar()
+  const [mounted, setMounted] = useState(false)
+
+  // avoid hydration mismatch with next-themes
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
-    <Sidebar>
+    // theme-aware classes: light -> bg-white / dark -> slate-900
+    <Sidebar className="bg-white text-black dark:bg-slate-900 dark:text-white border-r border-border">
       <SidebarHeader>
-  <div className="flex items-center gap-3 px-4 py-2">
-    <div className="flex items-center justify-center shrink-0">
-      <Image
-        src="/logo.png"
-        alt="IntelForge Logo"
-        width={40}
-        height={40}
-        className="object-contain block"
-        priority
-      />
-    </div>
+        <div className="flex items-center gap-3 px-4 py-2">
+          <div className="flex items-center justify-center shrink-0">
+            <Image
+              src="/logo.png"
+              alt="IntelForge Logo"
+              width={40}
+              height={40}
+              className="object-contain block"
+              priority
+            />
+          </div>
 
-    {state === "expanded" && (
-      <span className="font-extrabold text-lg leading-none text-black dark:text-white">
-        IntelForge
-      </span>
-    )}
-  </div>
-</SidebarHeader>
+          {state === "expanded" && (
+            <span className="font-extrabold text-lg leading-none text-black dark:text-white">
+              IntelForge
+            </span>
+          )}
+        </div>
+      </SidebarHeader>
 
-      
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
@@ -119,9 +126,12 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a
+                      href={item.url}
+                      className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-foreground hover:bg-muted/60 dark:hover:bg-white/5 transition-colors"
+                    >
                       <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                      <span className="truncate">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -137,48 +147,74 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="w-full">
-                  <Avatar className="h-8 w-8 shrink-0">
-                    <AvatarImage src="/avatar.png" alt="User" />
-                    <AvatarFallback>AD</AvatarFallback>
-                  </Avatar>
-                  {state === "expanded" && (
-                    <div className="flex flex-col items-start flex-1 overflow-hidden">
-                      <span className="text-sm font-medium truncate">Aditya</span>
-                      <span className="text-xs text-muted-foreground truncate">aditya@intelforge.com</span>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-3 w-full">
+                    <Avatar className="h-8 w-8 shrink-0">
+                      <AvatarImage src="/avatar.png" alt="User" />
+                      <AvatarFallback>AD</AvatarFallback>
+                    </Avatar>
+
+                    {state === "expanded" && (
+                      <div className="flex flex-col items-start flex-1 overflow-hidden">
+                        <span className="text-sm font-medium truncate text-foreground">Aditya</span>
+                        <span className="text-xs text-muted-foreground truncate">aditya@intelforge.com</span>
+                      </div>
+                    )}
+                  </div>
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent side="top" className="w-56" align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-2">
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem className="flex items-center gap-2">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>Settings</span>
                 </DropdownMenuItem>
+
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel>Theme</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => setTheme("light")}>
+
+                <DropdownMenuItem
+                  onClick={() => setTheme("light")}
+                  className="flex items-center gap-2"
+                >
                   <Sun className="mr-2 h-4 w-4" />
                   <span>Light</span>
-                  {theme === "light" && <span className="ml-auto">✓</span>}
+                  {/* only show check after mount to avoid mismatch */}
+                  {mounted && (resolvedTheme ?? theme) === "light" && (
+                    <span className="ml-auto">✓</span>
+                  )}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("dark")}>
+
+                <DropdownMenuItem
+                  onClick={() => setTheme("dark")}
+                  className="flex items-center gap-2"
+                >
                   <Moon className="mr-2 h-4 w-4" />
                   <span>Dark</span>
-                  {theme === "dark" && <span className="ml-auto">✓</span>}
+                  {mounted && (resolvedTheme ?? theme) === "dark" && (
+                    <span className="ml-auto">✓</span>
+                  )}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setTheme("system")}>
+
+                <DropdownMenuItem
+                  onClick={() => setTheme("system")}
+                  className="flex items-center gap-2"
+                >
                   <Settings className="mr-2 h-4 w-4" />
                   <span>System</span>
-                  {theme === "system" && <span className="ml-auto">✓</span>}
+                  {mounted && (resolvedTheme ?? theme) === "system" && (
+                    <span className="ml-auto">✓</span>
+                  )}
                 </DropdownMenuItem>
+
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+
+                <DropdownMenuItem className="flex items-center gap-2">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
