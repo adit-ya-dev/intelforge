@@ -1,36 +1,165 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📘 IntelForge — Technology Intelligence Platform
 
-## Getting Started
+Real-time AI-driven technology intelligence, forecasting, and strategic insights for defence innovation.
 
-First, run the development server:
+IntelForge is an automated platform designed to aggregate, analyze, and forecast emerging technologies using multi-source data inputs such as patents, research publications, industry reports, investments, and startup activity.
+It delivers intelligence dashboards, S-curve forecasts, TRL tracking, alerts, and domain-specific insights in real time.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🚀 Features
+1. Unified Technology Intelligence Dashboard
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Key KPIs (technologies tracked, TRL counts, alerts, patents, funding trends)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Time-series graphs for patents, citations, investments
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Quick semantic & keyword search
 
-## Learn More
+Top emerging signals (breakthroughs, patents, funding, publications)
 
-To learn more about Next.js, take a look at the following resources:
+2. Technology Search & Explorer
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Full-text + semantic (vector) search
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Filters: TRL, domain, geography, timelines, source types
 
-## Deploy on Vercel
+Result preview cards
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deep technology profiles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Technology Detail Page
+
+Overview + generated one-line summary
+
+Evidence timeline (patents → papers → funding → companies)
+
+TRL progression tracker
+
+S-Curve & Gartner Hype-Cycle projections
+
+Knowledge graph of related technologies, organizations, authors, funders
+
+Traceable sources (patent → PDF → claims → metadata)
+
+4. Forecasting & Modeling
+
+S-curve forecast models
+
+Multi-scenario predictions (base / conservative / aggressive)
+
+Model explainability: key drivers, confidence, data provenance
+
+Export to CSV / PDF / PPT
+
+5. Alerts & Monitoring
+
+Track technologies, organizations, trends
+
+Intelligent signal detection
+
+Alerts for:
+
+New patents
+
+Breakthrough publications
+
+Funding events
+
+TRL jumps
+
+Market signals
+
+Delivery channels: in-app, email, webhook
+
+6. Admin & Ingestion Console
+
+Manage pipeline connectors (patents, publications, datasets)
+
+Pipeline metrics (status, throughput, last run, errors)
+
+API key management
+
+Role-based access (Admin / Analyst / Viewer)
+
+7. User Settings
+
+Saved searches / watched techs
+
+Theme preferences (light / dark / system)
+
+Profile management
+
+🧬 Tech Stack
+Frontend
+
+Next.js 14+ (App Router)
+
+TypeScript
+
+Tailwind CSS
+
+Shadcn/UI (cards, inputs, buttons, sidebar, dropdowns)
+
+Lucide Icons
+
+Recharts (Analytics visualizations)
+
+next-themes (theme provider)
+
+Backend
+
+Next.js API Routes
+
+Optional integrations:
+
+Python microservices for forecasting models
+
+ElasticSearch / OpenSearch
+
+Neo4j or Memgraph (knowledge graph)
+
+PostgreSQL / MySQL
+
+Supabase / PlanetScale
+
+AI / Vector & Search
+
+OpenAI / Llama / Mistral LLMs
+
+Pinecone / Weaviate / ChromaDB
+
+Embeddings + RAG pipelines
+
+📂 Project Structure
+
+intelforge/
+│
+├─ app/                      # Next.js app-router pages
+│   ├─ layout.tsx            # Root layout
+│   ├─ page.tsx              # Home / Dashboard
+│   ├─ alerts/               # Alerts & monitoring module
+│   ├─ technology/           # Technology-level detail pages
+│   └─ api/                  # API endpoints
+│
+├─ components/
+│   ├─ ui/                   # shadcn/ui components
+│   ├─ layout/               # Sidebar, header, navbar
+│   └─ cards/                # KPI cards, metric cards
+│
+├─ lib/
+│   ├─ utils.ts              # helper utilities
+│   ├─ api.ts                # fetch wrapper
+│   └─ constants.ts
+│
+├─ public/
+│   ├─ logo.png              # IntelForge branding
+│   └─ icons/ 
+│
+├─ styles/
+│   ├─ globals.css
+│   └─ tailwind.css
+│
+├─ next.config.mjs
+├─ package.json
+└─ README.md
+
+
