@@ -129,37 +129,5 @@ Pinecone / Weaviate / ChromaDB
 
 Embeddings + RAG pipelines
 
-📂 Project Structure
-
-intelforge/
-│
-├─ app/                      # Next.js app-router pages
-│   ├─ layout.tsx            # Root layout
-│   ├─ page.tsx              # Home / Dashboard
-│   ├─ alerts/               # Alerts & monitoring module
-│   ├─ technology/           # Technology-level detail pages
-│   └─ api/                  # API endpoints
-│
-├─ components/
-│   ├─ ui/                   # shadcn/ui components
-│   ├─ layout/               # Sidebar, header, navbar
-│   └─ cards/                # KPI cards, metric cards
-│
-├─ lib/
-│   ├─ utils.ts              # helper utilities
-│   ├─ api.ts                # fetch wrapper
-│   └─ constants.ts
-│
-├─ public/
-│   ├─ logo.png              # IntelForge branding
-│   └─ icons/ 
-│
-├─ styles/
-│   ├─ globals.css
-│   └─ tailwind.css
-│
-├─ next.config.mjs
-├─ package.json
-└─ README.md
 
 
