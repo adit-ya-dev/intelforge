@@ -80,7 +80,7 @@ const items = [
   },
   {
     title: "Onboarding",
-    url: "#",
+    url: "onboarding",
     icon: GraduationCap,
   },
 ]
