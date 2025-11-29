@@ -1,4 +1,3 @@
-// components/dashboard/charts/FundingChart.tsx
 "use client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -10,24 +9,16 @@ import {
   Tooltip,
   ResponsiveContainer
 } from "recharts"
-<<<<<<< HEAD
+
 import { FundingData } from "@/types/dashboard"
-
-interface FundingChartProps {
-  timeRange: string
-  data: FundingData[]
-}
-
-export default function FundingChart({ timeRange, data }: FundingChartProps) {
-=======
 import { mockFundingData } from "@/lib/mock-data"
 
 interface FundingChartProps {
   timeRange: string
+  data?: FundingData[]   // optional so we can fallback to mockFundingData
 }
 
-export default function FundingChart({ timeRange }: FundingChartProps) {
->>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
+export default function FundingChart({ timeRange, data }: FundingChartProps) {
   return (
     <Card className="col-span-2">
       <CardHeader>
@@ -36,19 +27,15 @@ export default function FundingChart({ timeRange }: FundingChartProps) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-<<<<<<< HEAD
-          <BarChart data={data}>
-=======
-          <BarChart data={mockFundingData}>
->>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
+          <BarChart data={data && data.length > 0 ? data : mockFundingData}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis dataKey="month" className="text-xs" />
             <YAxis className="text-xs" />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px'
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "8px"
               }}
             />
             <Bar dataKey="amount" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
@@ -57,8 +44,4 @@ export default function FundingChart({ timeRange }: FundingChartProps) {
       </CardContent>
     </Card>
   )
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b

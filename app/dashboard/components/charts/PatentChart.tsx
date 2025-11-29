@@ -1,4 +1,3 @@
-// components/dashboard/charts/PatentChart.tsx
 "use client"
 import { Maximize2 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,24 +12,16 @@ import {
   ResponsiveContainer,
   Legend
 } from "recharts"
-<<<<<<< HEAD
+
 import { PatentData } from "@/types/dashboard"
-
-interface PatentChartProps {
-  timeRange: string
-  data: PatentData[]
-}
-
-export default function PatentChart({ timeRange, data }: PatentChartProps) {
-=======
 import { mockPatentData } from "@/lib/mock-data"
 
 interface PatentChartProps {
   timeRange: string
+  data?: PatentData[]   // optional so we can fallback to mockPatentData
 }
 
-export default function PatentChart({ timeRange }: PatentChartProps) {
->>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
+export default function PatentChart({ timeRange, data }: PatentChartProps) {
   return (
     <Card className="col-span-2">
       <CardHeader>
@@ -44,11 +35,7 @@ export default function PatentChart({ timeRange }: PatentChartProps) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-<<<<<<< HEAD
-          <AreaChart data={data}>
-=======
-          <AreaChart data={mockPatentData}>
->>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
+          <AreaChart data={data && data.length > 0 ? data : mockPatentData}>
             <defs>
               <linearGradient id="colorFilings" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
@@ -67,7 +54,7 @@ export default function PatentChart({ timeRange }: PatentChartProps) {
                 backgroundColor: 'hsl(var(--card))',
                 border: '1px solid hsl(var(--border))',
                 borderRadius: '8px'
-              }}
+              }} 
             />
             <Legend />
             <Area 
@@ -91,8 +78,4 @@ export default function PatentChart({ timeRange }: PatentChartProps) {
       </CardContent>
     </Card>
   )
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
