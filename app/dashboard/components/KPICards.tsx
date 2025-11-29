@@ -1,4 +1,5 @@
 // app/dashboard/components/KPICards.tsx
+import * as LucideIcons from "lucide-react"
 import { ArrowUpRight, ArrowDownRight } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { KPIMetric } from "@/types/dashboard"
@@ -11,7 +12,7 @@ export default function KPICards({ kpis }: KPICardsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       {kpis.map((kpi, index) => {
-        const Icon = kpi.icon
+        const Icon = LucideIcons[kpi.icon as keyof typeof LucideIcons] as React.ComponentType<{ className?: string }>
         return (
           <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

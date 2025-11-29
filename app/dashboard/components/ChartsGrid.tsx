@@ -10,17 +10,17 @@ import {
   Area,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend
+  Legend,
 } from "recharts"
-import { mockPatentData, mockFundingData, mockTRLDistribution, mockActivities } from "@/lib/mock-data"
+import { ActivityItem, FundingData, PatentData, TRLData } from "@/types/dashboard"
+
+// YEHI LINE CHANGE KI HAI — ab 100% sahi path hai
+import TRLDistributionChart from "./charts/TRLDistributionChart"
 
 interface ChartsGridProps {
   widgets: {
@@ -31,9 +31,13 @@ interface ChartsGridProps {
     activity: boolean
   }
   timeRange: string
+  patentData: PatentData[]
+  fundingData: FundingData[]
+  trlDistribution: TRLData[]
+  activities: ActivityItem[]
 }
 
-function PatentChart({ timeRange }: { timeRange: string }) {
+function PatentChart({ timeRange, data }: { timeRange: string; data: PatentData[] }) {
   return (
     <Card className="col-span-2">
       <CardHeader>
@@ -47,44 +51,24 @@ function PatentChart({ timeRange }: { timeRange: string }) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={mockPatentData}>
+          <AreaChart data={data}>
             <defs>
               <linearGradient id="colorFilings" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorCitations" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis dataKey="date" className="text-xs" />
             <YAxis className="text-xs" />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px'
-              }}
-            />
+            <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }} />
             <Legend />
-            <Area 
-              type="monotone" 
-              dataKey="filings" 
-              stroke="#3b82f6" 
-              fillOpacity={1} 
-              fill="url(#colorFilings)" 
-              name="Patent Filings"
-            />
-            <Area 
-              type="monotone" 
-              dataKey="citations" 
-              stroke="#10b981" 
-              fillOpacity={1} 
-              fill="url(#colorCitations)" 
-              name="Citations"
-            />
+            <Area type="monotone" dataKey="filings" stroke="#3b82f6" fillOpacity={1} fill="url(#colorFilings)" name="Patent Filings" />
+            <Area type="monotone" dataKey="citations" stroke="#10b981" fillOpacity={1} fill="url(#colorCitations)" name="Citations" />
           </AreaChart>
         </ResponsiveContainer>
       </CardContent>
@@ -92,53 +76,7 @@ function PatentChart({ timeRange }: { timeRange: string }) {
   )
 }
 
-function TRLDistributionChart() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>TRL Distribution</CardTitle>
-        <CardDescription>Technology Readiness Levels</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={mockTRLDistribution}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {mockTRLDistribution.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="mt-4 space-y-2">
-          {mockTRLDistribution.map((item, index) => (
-            <div key={index} className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <div 
-                  className="h-3 w-3 rounded-full" 
-                  style={{ backgroundColor: item.color }}
-                />
-                <span>{item.name}</span>
-              </div>
-              <span className="font-medium">{item.value}</span>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
-function FundingChart({ timeRange }: { timeRange: string }) {
+function FundingChart({ timeRange, data }: { timeRange: string; data: FundingData[] }) {
   return (
     <Card className="col-span-2">
       <CardHeader>
@@ -147,18 +85,12 @@ function FundingChart({ timeRange }: { timeRange: string }) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={mockFundingData}>
+          <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis dataKey="month" className="text-xs" />
             <YAxis className="text-xs" />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'hsl(var(--card))',
-                border: '1px solid hsl(var(--border))',
-                borderRadius: '8px'
-              }}
-            />
-            <Bar dataKey="amount" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
+            <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px' }} />
+            <Bar dataKey="amount" fill="#8b5cf6" radius={[8, 8,0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
@@ -166,7 +98,7 @@ function FundingChart({ timeRange }: { timeRange: string }) {
   )
 }
 
-function ActivityFeed() {
+function ActivityFeed({ data }: { data: ActivityItem[] }) {
   return (
     <Card>
       <CardHeader>
@@ -178,14 +110,12 @@ function ActivityFeed() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {mockActivities.map((activity) => (
+          {data.map((activity) => (
             <div key={activity.id} className="flex gap-3 text-sm">
               <div className="h-2 w-2 rounded-full bg-primary mt-2 flex-shrink-0" />
               <div className="flex-1">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="font-medium">{activity.description}</p>
-                </div>
-                <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground flex-wrap">
+                <p className="font-medium">{activity.description}</p>
+                <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                   <Badge variant="outline" className="text-xs">{activity.type}</Badge>
                   <span>{activity.tech}</span>
                   <span>•</span>
@@ -200,13 +130,20 @@ function ActivityFeed() {
   )
 }
 
-export default function ChartsGrid({ widgets, timeRange }: ChartsGridProps) {
+export default function ChartsGrid({
+  widgets,
+  timeRange,
+  patentData,
+  fundingData,
+  trlDistribution,
+  activities
+}: ChartsGridProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {widgets.patents && <PatentChart timeRange={timeRange} />}
-      {widgets.trl && <TRLDistributionChart />}
-      {widgets.funding && <FundingChart timeRange={timeRange} />}
-      {widgets.activity && <ActivityFeed />}
+      {widgets.patents && <PatentChart timeRange={timeRange} data={patentData} />}
+      {widgets.trl && <TRLDistributionChart data={trlDistribution} />}   {/* Capital T */}
+      {widgets.funding && <FundingChart timeRange={timeRange} data={fundingData} />}
+      {widgets.activity && <ActivityFeed data={activities} />}
     </div>
   )
 }

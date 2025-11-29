@@ -6,7 +6,7 @@ export interface KPIMetric {
   value: string | number
   change: number
   changeLabel: string
-  icon: LucideIcon
+  icon: string  // Changed to string for DB compatibility
   trend: "up" | "down" | "neutral"
 }
 
@@ -44,4 +44,11 @@ export interface TRLData {
   name: string
   value: number
   color: string
+
+  [key: string]: string | number | undefined
+}
+export type TRLChartData = Record<string, any> & {
+  name: string
+  value: number
+  color?: string
 }

@@ -13,13 +13,14 @@ import {
   ResponsiveContainer,
   Legend
 } from "recharts"
-import { mockPatentData } from "@/lib/mock-data"
+import { PatentData } from "@/types/dashboard"
 
 interface PatentChartProps {
   timeRange: string
+  data: PatentData[]
 }
 
-export default function PatentChart({ timeRange }: PatentChartProps) {
+export default function PatentChart({ timeRange, data }: PatentChartProps) {
   return (
     <Card className="col-span-2">
       <CardHeader>
@@ -33,7 +34,7 @@ export default function PatentChart({ timeRange }: PatentChartProps) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={mockPatentData}>
+          <AreaChart data={data}>
             <defs>
               <linearGradient id="colorFilings" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
