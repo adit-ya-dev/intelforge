@@ -10,6 +10,7 @@ import {
   Tooltip,
   ResponsiveContainer
 } from "recharts"
+<<<<<<< HEAD
 import { FundingData } from "@/types/dashboard"
 
 interface FundingChartProps {
@@ -18,6 +19,15 @@ interface FundingChartProps {
 }
 
 export default function FundingChart({ timeRange, data }: FundingChartProps) {
+=======
+import { mockFundingData } from "@/lib/mock-data"
+
+interface FundingChartProps {
+  timeRange: string
+}
+
+export default function FundingChart({ timeRange }: FundingChartProps) {
+>>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
   return (
     <Card className="col-span-2">
       <CardHeader>
@@ -26,7 +36,11 @@ export default function FundingChart({ timeRange, data }: FundingChartProps) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
+<<<<<<< HEAD
           <BarChart data={data}>
+=======
+          <BarChart data={mockFundingData}>
+>>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis dataKey="month" className="text-xs" />
             <YAxis className="text-xs" />
@@ -43,4 +57,8 @@ export default function FundingChart({ timeRange, data }: FundingChartProps) {
       </CardContent>
     </Card>
   )
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b

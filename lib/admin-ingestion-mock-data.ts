@@ -1,5 +1,5 @@
 // lib/admin-ingestion-mock-data.ts
-
+import { ComponentType } from 'react';
 import {
   DataConnector,
   PipelineRun,
@@ -12,21 +12,48 @@ import {
   ConnectorTemplate
 } from '@/types/admin-ingestion';
 
+// FIX: Define IconPlaceholder as a function that returns null to avoid JSX errors, 
+// ensuring the type ComponentType is satisfied without relying on JSX parsing.
+const IconPlaceholder: ComponentType<{ className?: string }> = () => {
+    return null;
+};
+
+const now = new Date();
+const oneHourAgo = new Date(now.getTime() - 3600000);
+const twoHoursAgo = new Date(now.getTime() - 2 * 3600000);
+const sixHoursAgo = new Date(now.getTime() - 6 * 3600000);
+const yesterday = new Date(now.getTime() - 24 * 3600000);
+const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 3600000);
+
+export const mockPipelineMetrics: PipelineMetrics = {
+  totalRuns: 1247,
+  successfulRuns: 1198,
+  failedRuns: 49,
+  averageDuration: 2400,
+  totalDocumentsProcessed: 3568926,
+  processingRate: 8500,
+  queueDepth: 2450,
+  activeJobs: 3,
+  errorRate: 3.9
+};
+
 export const mockConnectors: DataConnector[] = [
   {
     id: 'conn-001',
     name: 'USPTO Patents',
+    source: 'API Polling',
+    lastRun: oneHourAgo,
     type: 'patent',
     provider: 'USPTO',
     status: 'active',
     apiEndpoint: 'https://api.uspto.gov/patents/v2',
     description: 'United States Patent and Trademark Office patent database',
-    icon: '🏛️',
+    icon: IconPlaceholder, 
     requiresAuth: true,
     authType: 'api_key',
     pollingInterval: 60,
-    lastSync: new Date('2024-01-15T10:30:00'),
-    nextSync: new Date('2024-01-15T11:30:00'),
+    lastSync: oneHourAgo,
+    nextSync: new Date(now.getTime() + 1800000),
     totalDocuments: 1250000,
     documentsToday: 3420,
     errorCount: 2,
@@ -34,8 +61,7 @@ export const mockConnectors: DataConnector[] = [
       apiKey: 'masked_key_123',
       rateLimit: 100,
       batchSize: 50,
-      backfillEnabled: true,
-      backfillStartDate: new Date('2020-01-01')
+      backfillEnabled: true
     },
     capabilities: ['full_text', 'citations', 'classifications', 'images'],
     healthScore: 98
@@ -43,16 +69,18 @@ export const mockConnectors: DataConnector[] = [
   {
     id: 'conn-002',
     name: 'CrossRef Research',
+    source: 'API Polling',
+    lastRun: twoHoursAgo,
     type: 'research',
     provider: 'CrossRef',
     status: 'active',
     apiEndpoint: 'https://api.crossref.org/works',
     description: 'Academic publications and research papers metadata',
-    icon: '📚',
+    icon: IconPlaceholder, 
     requiresAuth: false,
     pollingInterval: 120,
-    lastSync: new Date('2024-01-15T09:15:00'),
-    nextSync: new Date('2024-01-15T11:15:00'),
+    lastSync: twoHoursAgo,
+    nextSync: new Date(now.getTime() + 3600000),
     totalDocuments: 890000,
     documentsToday: 1856,
     errorCount: 0,
@@ -67,24 +95,25 @@ export const mockConnectors: DataConnector[] = [
   {
     id: 'conn-003',
     name: 'arXiv Preprints',
+    source: 'API Polling',
+    lastRun: sixHoursAgo,
     type: 'research',
     provider: 'arXiv',
     status: 'active',
     apiEndpoint: 'https://export.arxiv.org/api/query',
     description: 'Open-access archive for scientific papers',
-    icon: '🔬',
+    icon: IconPlaceholder, 
     requiresAuth: false,
     pollingInterval: 180,
-    lastSync: new Date('2024-01-15T08:00:00'),
-    nextSync: new Date('2024-01-15T11:00:00'),
+    lastSync: sixHoursAgo,
+    nextSync: new Date(now.getTime() + 1800000),
     totalDocuments: 450000,
     documentsToday: 892,
     errorCount: 5,
     config: {
       rateLimit: 30,
       batchSize: 50,
-      backfillEnabled: true,
-      backfillStartDate: new Date('2022-01-01')
+      backfillEnabled: true
     },
     capabilities: ['full_text', 'latex', 'categories', 'versions'],
     healthScore: 94
@@ -92,16 +121,18 @@ export const mockConnectors: DataConnector[] = [
   {
     id: 'conn-004',
     name: 'Crunchbase Funding',
+    source: 'API Polling',
+    lastRun: twoDaysAgo,
     type: 'funding',
     provider: 'Crunchbase',
     status: 'error',
     apiEndpoint: 'https://api.crunchbase.com/v4',
     description: 'Startup funding rounds and investor data',
-    icon: '💰',
+    icon: IconPlaceholder, 
     requiresAuth: true,
     authType: 'api_key',
     pollingInterval: 360,
-    lastSync: new Date('2024-01-14T22:00:00'),
+    lastSync: twoDaysAgo,
     nextSync: null,
     totalDocuments: 125000,
     documentsToday: 0,
@@ -117,15 +148,17 @@ export const mockConnectors: DataConnector[] = [
   {
     id: 'conn-005',
     name: 'Tech News RSS',
+    source: 'RSS Feed',
+    lastRun: yesterday,
     type: 'news',
     provider: 'Custom RSS',
     status: 'paused',
     apiEndpoint: 'https://feeds.techcrunch.com',
     description: 'Technology news from multiple RSS feeds',
-    icon: '📰',
+    icon: IconPlaceholder, 
     requiresAuth: false,
     pollingInterval: 30,
-    lastSync: new Date('2024-01-15T07:00:00'),
+    lastSync: yesterday,
     nextSync: null,
     totalDocuments: 78000,
     documentsToday: 0,
@@ -145,7 +178,7 @@ export const mockPipelineRuns: PipelineRun[] = [
     connectorId: 'conn-001',
     connectorName: 'USPTO Patents',
     status: 'running',
-    startTime: new Date('2024-01-15T10:30:00'),
+    startTime: oneHourAgo,
     documentsProcessed: 1250,
     documentsQueued: 750,
     documentsFailed: 2,
@@ -159,8 +192,8 @@ export const mockPipelineRuns: PipelineRun[] = [
     connectorId: 'conn-002',
     connectorName: 'CrossRef Research',
     status: 'completed',
-    startTime: new Date('2024-01-15T09:15:00'),
-    endTime: new Date('2024-01-15T09:45:00'),
+    startTime: twoHoursAgo,
+    endTime: oneHourAgo,
     duration: 1800,
     documentsProcessed: 1856,
     documentsQueued: 0,
@@ -175,8 +208,8 @@ export const mockPipelineRuns: PipelineRun[] = [
     connectorId: 'conn-004',
     connectorName: 'Crunchbase Funding',
     status: 'failed',
-    startTime: new Date('2024-01-14T22:00:00'),
-    endTime: new Date('2024-01-14T22:05:00'),
+    startTime: twoDaysAgo,
+    endTime: new Date(twoDaysAgo.getTime() + 300000),
     duration: 300,
     documentsProcessed: 0,
     documentsQueued: 450,
@@ -191,22 +224,10 @@ export const mockPipelineRuns: PipelineRun[] = [
   }
 ];
 
-export const mockPipelineMetrics: PipelineMetrics = {
-  totalRuns: 1247,
-  successfulRuns: 1198,
-  failedRuns: 49,
-  averageDuration: 2400,
-  totalDocumentsProcessed: 3568926,
-  processingRate: 8500,
-  queueDepth: 2450,
-  activeJobs: 3,
-  errorRate: 3.9
-};
-
 export const mockIngestionLogs: IngestionLog[] = [
   {
     id: 'log-001',
-    timestamp: new Date('2024-01-15T10:35:42'),
+    timestamp: new Date(now.getTime() - 300000),
     level: 'info',
     connectorId: 'conn-001',
     message: 'Successfully processed batch of 50 patents',
@@ -217,7 +238,7 @@ export const mockIngestionLogs: IngestionLog[] = [
   },
   {
     id: 'log-002',
-    timestamp: new Date('2024-01-15T10:34:18'),
+    timestamp: new Date(now.getTime() - 360000),
     level: 'warning',
     connectorId: 'conn-003',
     message: 'Rate limit approaching: 28/30 requests used',
@@ -227,7 +248,7 @@ export const mockIngestionLogs: IngestionLog[] = [
   },
   {
     id: 'log-003',
-    timestamp: new Date('2024-01-15T10:33:55'),
+    timestamp: new Date(now.getTime() - 420000),
     level: 'error',
     connectorId: 'conn-004',
     message: 'Failed to parse funding round data',
@@ -239,7 +260,7 @@ export const mockIngestionLogs: IngestionLog[] = [
   },
   {
     id: 'log-004',
-    timestamp: new Date('2024-01-15T10:32:10'),
+    timestamp: new Date(now.getTime() - 480000),
     level: 'info',
     connectorId: 'conn-002',
     message: 'Initiated backfill for date range 2023-12-01 to 2023-12-31',
@@ -249,7 +270,7 @@ export const mockIngestionLogs: IngestionLog[] = [
   },
   {
     id: 'log-005',
-    timestamp: new Date('2024-01-15T10:30:00'),
+    timestamp: oneHourAgo,
     level: 'info',
     connectorId: 'conn-001',
     message: 'Pipeline run started',
@@ -265,7 +286,7 @@ export const mockDocumentUploads: DocumentUpload[] = [
     fileName: 'research_papers_2024.csv',
     fileType: 'csv',
     fileSize: 15728640,
-    uploadDate: new Date('2024-01-15T09:00:00'),
+    uploadDate: sixHoursAgo,
     status: 'completed',
     progress: 100,
     documentsExtracted: 1250,
@@ -276,7 +297,7 @@ export const mockDocumentUploads: DocumentUpload[] = [
     fileName: 'patent_applications.pdf',
     fileType: 'pdf',
     fileSize: 8388608,
-    uploadDate: new Date('2024-01-15T10:15:00'),
+    uploadDate: oneHourAgo,
     status: 'processing',
     progress: 65,
     documentsExtracted: 32,
@@ -289,7 +310,7 @@ export const mockIndexOperations: IndexOperation[] = [
     id: 'idx-001',
     type: 'rebuild_embeddings',
     status: 'running',
-    startTime: new Date('2024-01-15T10:00:00'),
+    startTime: oneHourAgo,
     affectedDocuments: 50000,
     progress: 35,
     estimatedTimeRemaining: 1800
@@ -298,8 +319,8 @@ export const mockIndexOperations: IndexOperation[] = [
     id: 'idx-002',
     type: 'reindex',
     status: 'completed',
-    startTime: new Date('2024-01-14T22:00:00'),
-    endTime: new Date('2024-01-14T23:30:00'),
+    startTime: twoDaysAgo,
+    endTime: new Date(twoDaysAgo.getTime() + 5400000),
     affectedDocuments: 125000,
     progress: 100
   }
@@ -310,9 +331,9 @@ export const mockApiSecrets: ApiSecret[] = [
     id: 'secret-001',
     name: 'USPTO API Key',
     service: 'USPTO',
-    createdAt: new Date('2023-06-01'),
-    lastUsed: new Date('2024-01-15T10:30:00'),
-    expiresAt: new Date('2024-06-01'),
+    createdAt: new Date(now.getTime() - 7 * 30 * 24 * 3600000),
+    lastUsed: oneHourAgo,
+    expiresAt: new Date(now.getTime() + 5 * 30 * 24 * 3600000),
     status: 'active',
     permissions: ['read', 'search'],
     masked: 'sk-...abc123'
@@ -321,9 +342,9 @@ export const mockApiSecrets: ApiSecret[] = [
     id: 'secret-002',
     name: 'Crunchbase API Key',
     service: 'Crunchbase',
-    createdAt: new Date('2023-08-15'),
-    lastUsed: new Date('2024-01-14T22:00:00'),
-    expiresAt: new Date('2024-02-15'),
+    createdAt: new Date(now.getTime() - 4 * 30 * 24 * 3600000),
+    lastUsed: twoDaysAgo,
+    expiresAt: new Date(now.getTime() + 2 * 30 * 24 * 3600000),
     status: 'active',
     permissions: ['read'],
     masked: 'cb-...xyz789'
@@ -332,8 +353,8 @@ export const mockApiSecrets: ApiSecret[] = [
     id: 'secret-003',
     name: 'OpenAI API Key',
     service: 'OpenAI',
-    createdAt: new Date('2023-09-01'),
-    lastUsed: new Date('2024-01-15T10:00:00'),
+    createdAt: new Date(now.getTime() - 3 * 30 * 24 * 3600000),
+    lastUsed: oneHourAgo,
     status: 'active',
     permissions: ['embeddings', 'completions'],
     masked: 'sk-...def456'
@@ -341,7 +362,7 @@ export const mockApiSecrets: ApiSecret[] = [
 ];
 
 export const mockThroughputData: ThroughputData[] = Array.from({ length: 24 }, (_, i) => ({
-  timestamp: new Date(Date.now() - (23 - i) * 3600000),
+  timestamp: new Date(now.getTime() - (23 - i) * 3600000),
   documentsPerSecond: Math.random() * 20 + 5,
   bytesPerSecond: Math.random() * 1000000 + 500000,
   activeConnectors: Math.floor(Math.random() * 3) + 2
@@ -362,7 +383,8 @@ export const mockConnectorTemplates: ConnectorTemplate[] = [
       backfillEnabled: true
     },
     documentationUrl: 'https://developer.uspto.gov',
-    popular: true
+    popular: true,
+    icon: IconPlaceholder 
   },
   {
     id: 'template-002',
@@ -377,7 +399,8 @@ export const mockConnectorTemplates: ConnectorTemplate[] = [
       batchSize: 25
     },
     documentationUrl: 'https://www.epo.org/apis',
-    popular: true
+    popular: true,
+    icon: IconPlaceholder 
   },
   {
     id: 'template-003',
@@ -392,6 +415,7 @@ export const mockConnectorTemplates: ConnectorTemplate[] = [
       batchSize: 100
     },
     documentationUrl: 'https://www.ncbi.nlm.nih.gov/pmc/tools/developers',
-    popular: false
+    popular: false,
+    icon: IconPlaceholder 
   }
 ];

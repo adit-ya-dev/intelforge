@@ -1,19 +1,24 @@
-// app/admin-ingestion/components/ManualIngest.tsx
-
 "use client";
 
-import { useState } from 'react';
-import { mockDocumentUploads } from '@/lib/admin-ingestion-mock-data';
+import { useState, useEffect } from 'react';
 import { DocumentUpload, FieldMapping } from '@/types/admin-ingestion';
 
-export default function ManualIngest() {
-  const [uploads, setUploads] = useState<DocumentUpload[]>(mockDocumentUploads);
+interface ManualIngestProps {
+  uploads: DocumentUpload[];
+}
+
+export default function ManualIngest({ uploads: initialUploads }: ManualIngestProps) {
+  const [uploads, setUploads] = useState<DocumentUpload[]>(initialUploads);
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [mappingStep, setMappingStep] = useState(false);
   const [fieldMappings, setFieldMappings] = useState<FieldMapping[]>([
     { sourceField: '', targetField: '', transformation: 'none', required: false }
   ]);
+
+  useEffect(() => {
+    setUploads(initialUploads);
+  }, [initialUploads]);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -58,7 +63,6 @@ export default function ManualIngest() {
     setMappingStep(false);
     setSelectedFile(null);
 
-    // Simulate upload progress
     simulateUpload(newUpload.id);
   };
 
@@ -115,13 +119,6 @@ export default function ManualIngest() {
           </svg>
         );
       case 'json':
-        return (
-          <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <path d="M8 7l-3 5 3 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M16 7l3 5-3 5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M12 5v14" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-          </svg>
-        );
       case 'xml':
         return (
           <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -135,40 +132,10 @@ export default function ManualIngest() {
           <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" aria-hidden>
             <path d="M12 3v12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
             <path d="M20 21H4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-            <path d="M16 7l-4-4-4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M8 7l4-4 4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         );
     }
-  }
-
-  function UploadIconLarge() {
-    return (
-      <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path d="M16 16v4H8v-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M12 3v12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M20 16a4 4 0 00-4-4h-1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M8 12a4 4 0 00-4 4v0" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
-  }
-
-  function RocketIconSmall() {
-    return (
-      <svg className="w-4 h-4 inline-block" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path d="M12 2s4 1 6 3 3 6 3 6-3 1-6 3-6 1-6 1-1-4 1-6S12 2 12 2z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M7 17s-1 3-3 4l1-3 2-1z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
-  }
-
-  function WarningInline() {
-    return (
-      <svg className="w-4 h-4 inline-block mr-2 text-red-400" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h17.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M12 9v4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M12 17h.01" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
   }
 
   return (
@@ -189,7 +156,11 @@ export default function ManualIngest() {
           >
             <div className="flex flex-col items-center gap-4">
               <div className="text-6xl">
-                <UploadIconLarge />
+                <svg className="w-16 h-16 mx-auto text-muted-foreground" viewBox="0 0 24 24" fill="none">
+                  <path d="M16 16v4H8v-4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M12 3v12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M8 7l4-4 4 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </div>
               <div>
                 <p className="text-lg font-medium text-white">Drop files here or click to browse</p>
@@ -260,8 +231,10 @@ export default function ManualIngest() {
                   <div key={index} className="bg-background border border-border rounded-lg p-4">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                       <div>
-                        <label className="block text-xs text-muted-foreground mb-1">Source Field</label>
+                        {/* Source Field - Accessibility Fix */}
+                        <label htmlFor={`source-${index}`} className="block text-xs text-muted-foreground mb-1">Source Field</label>
                         <input
+                          id={`source-${index}`}
                           type="text"
                           value={mapping.sourceField}
                           onChange={(e) => updateFieldMapping(index, 'sourceField', e.target.value)}
@@ -270,8 +243,10 @@ export default function ManualIngest() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs text-muted-foreground mb-1">Target Field</label>
+                        {/* Target Field - Accessibility Fix */}
+                        <label htmlFor={`target-${index}`} className="block text-xs text-muted-foreground mb-1">Target Field</label>
                         <input
+                          id={`target-${index}`}
                           type="text"
                           value={mapping.targetField}
                           onChange={(e) => updateFieldMapping(index, 'targetField', e.target.value)}
@@ -280,8 +255,10 @@ export default function ManualIngest() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs text-muted-foreground mb-1">Transformation</label>
+                        {/* Transformation Select - Accessibility Fix */}
+                        <label htmlFor={`transform-${index}`} className="block text-xs text-muted-foreground mb-1">Transformation</label>
                         <select
+                          id={`transform-${index}`}
                           value={mapping.transformation}
                           onChange={(e) => updateFieldMapping(index, 'transformation', e.target.value)}
                           className="w-full px-3 py-2 bg-card border border-border rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -301,6 +278,7 @@ export default function ManualIngest() {
                             checked={mapping.required}
                             onChange={(e) => updateFieldMapping(index, 'required', e.target.checked)}
                             className="w-4 h-4 bg-card border border-border rounded text-blue-500"
+                            aria-label={`Required for field ${index + 1}`}
                           />
                           <span className="text-sm text-white">Required</span>
                         </label>
@@ -335,7 +313,6 @@ export default function ManualIngest() {
                 onClick={handleUpload}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
               >
-                <RocketIconSmall />
                 <span>Start Processing</span>
               </button>
             </div>
@@ -348,69 +325,72 @@ export default function ManualIngest() {
         <h2 className="text-xl font-semibold text-white mb-4">Recent Uploads</h2>
         
         <div className="space-y-3">
-          {uploads.map((upload) => (
-            <div key={upload.id} className="bg-background border border-border rounded-lg p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-md bg-muted/10 flex items-center justify-center text-white">
-                    {renderFileIcon(upload.fileType)}
-                  </div>
-                  <div>
-                    <p className="font-medium text-white">{upload.fileName}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatFileSize(upload.fileSize)} • {upload.uploadDate.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-                <span className={`px-2 py-1 text-xs font-medium rounded-full border ${
-                  upload.status === 'completed' 
-                    ? 'bg-green-500/20 text-green-400 border-green-500/50'
-                    : upload.status === 'failed'
-                    ? 'bg-red-500/20 text-red-400 border-red-500/50'
-                    : 'bg-blue-500/20 text-blue-400 border-blue-500/50'
-                }`}>
-                  {upload.status}
-                </span>
-              </div>
-
-              {(upload.status === 'uploading' || upload.status === 'processing') && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Processing</span>
-                    <span className="text-xs text-muted-foreground">{upload.progress}%</span>
-                  </div>
-                  <div className="w-full bg-card rounded-full h-2">
-                    <div
-                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${upload.progress}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {upload.status === 'completed' && (
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-green-400">
-                    ✓ {upload.documentsExtracted} documents extracted
-                  </p>
-                  <button className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
-                    View Documents →
-                  </button>
-                </div>
-              )}
-
-              {upload.errors && upload.errors.length > 0 && (
-                <div className="mt-3 p-2 bg-red-500/10 border border-red-500/30 rounded">
-                  {upload.errors.map((error, idx) => (
-                    <p key={idx} className="text-xs text-red-400 flex items-center gap-2">
-                      <WarningInline />
-                      <span>{error}</span>
-                    </p>
-                  ))}
-                </div>
-              )}
+          {uploads.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              No uploads yet
             </div>
-          ))}
+          ) : (
+            uploads.map((upload) => (
+              <div key={upload.id} className="bg-background border border-border rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-md bg-muted/10 flex items-center justify-center text-white">
+                      {renderFileIcon(upload.fileType)}
+                    </div>
+                    <div>
+                      <p className="font-medium text-white">{upload.fileName}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatFileSize(upload.fileSize)} • {upload.uploadDate.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full border ${
+                    upload.status === 'completed' 
+                      ? 'bg-green-500/20 text-green-400 border-green-500/50'
+                      : upload.status === 'failed'
+                      ? 'bg-red-500/20 text-red-400 border-red-500/50'
+                      : 'bg-blue-500/20 text-blue-400 border-blue-500/50'
+                  }`}>
+                    {upload.status}
+                  </span>
+                </div>
+
+                {(upload.status === 'uploading' || upload.status === 'processing') && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-muted-foreground">Processing</span>
+                      <span className="text-xs text-muted-foreground">{upload.progress}%</span>
+                    </div>
+                    <div className="w-full bg-card rounded-full h-2">
+                      <div
+                        className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${upload.progress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {upload.status === 'completed' && (
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-green-400">
+                      ✓ {upload.documentsExtracted} documents extracted
+                    </p>
+                    <button className="text-sm text-blue-400 hover:text-blue-300 transition-colors">
+                      View Documents →
+                    </button>
+                  </div>
+                )}
+
+                {upload.errors && upload.errors.length > 0 && (
+                  <div className="mt-3 p-2 bg-red-500/10 border border-red-500/30 rounded">
+                    {upload.errors.map((error, idx) => (
+                      <p key={idx} className="text-xs text-red-400">• {error}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

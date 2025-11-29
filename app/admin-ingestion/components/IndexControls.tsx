@@ -2,15 +2,22 @@
 
 "use client";
 
-import { useState } from 'react';
-import { mockIndexOperations } from '@/lib/admin-ingestion-mock-data';
+import { useState, useEffect } from 'react';
 import { IndexOperation } from '@/types/admin-ingestion';
 
-export default function IndexControls() {
-  const [operations, setOperations] = useState<IndexOperation[]>(mockIndexOperations);
+interface IndexControlsProps {
+  operations: IndexOperation[];
+}
+
+export default function IndexControls({ operations: initialOperations }: IndexControlsProps) {
+  const [operations, setOperations] = useState<IndexOperation[]>(initialOperations);
   const [selectedOperation, setSelectedOperation] = useState<string>('reindex');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingOperation, setPendingOperation] = useState<string | null>(null);
+
+  useEffect(() => {
+    setOperations(initialOperations);
+  }, [initialOperations]);
 
   const operationTypes = [
     {
@@ -114,7 +121,6 @@ export default function IndexControls() {
   };
 
   function renderIcon(opId: string) {
-    // small, neutral-styled SVG icons (no emoji)
     switch (opId) {
       case 'reindex':
         return (

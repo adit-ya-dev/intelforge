@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
   Legend
 } from "recharts"
+<<<<<<< HEAD
 import { PatentData } from "@/types/dashboard"
 
 interface PatentChartProps {
@@ -21,6 +22,15 @@ interface PatentChartProps {
 }
 
 export default function PatentChart({ timeRange, data }: PatentChartProps) {
+=======
+import { mockPatentData } from "@/lib/mock-data"
+
+interface PatentChartProps {
+  timeRange: string
+}
+
+export default function PatentChart({ timeRange }: PatentChartProps) {
+>>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
   return (
     <Card className="col-span-2">
       <CardHeader>
@@ -34,7 +44,11 @@ export default function PatentChart({ timeRange, data }: PatentChartProps) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
+<<<<<<< HEAD
           <AreaChart data={data}>
+=======
+          <AreaChart data={mockPatentData}>
+>>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
             <defs>
               <linearGradient id="colorFilings" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
@@ -77,4 +91,8 @@ export default function PatentChart({ timeRange, data }: PatentChartProps) {
       </CardContent>
     </Card>
   )
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8b2a45feec1668156599d6b21663eb2adcbff17b
