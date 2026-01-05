@@ -14,32 +14,7 @@ import NotesCollaboration from "./components/NotesCollaboration";
 import ExportPanel from "./components/ExportPanel";
 import LoadingState from "./components/LoadingState";
 
-// Inline minimal type definitions
-type TechnologyMetadata = {
-  id: string;
-  name: string;
-  canonicalSummary: string;
-  domains: string[];
-  currentTRL: number;
-  confidence: string;
-  lastUpdated: string;
-  isWatched: boolean;
-  relatedTechCount: number;
-  sourceCount: number;
-};
 
-type TRLHistoryEntry = {
-  trl: number;
-  date: string;
-  confidence: string;
-  evidenceIds: string[];
-  reasoning: string;
-  keyMilestones: string[];
-};
-
-type Comment = {
-  id: string;
-  userId: string;
   userName: string;
   userAvatar?: string;
   content: string;
