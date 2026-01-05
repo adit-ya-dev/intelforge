@@ -7,21 +7,7 @@ import { useAdminIngestionData } from '@/hooks/useAdminIngestionData';
 import { ConnectorTemplate } from '@/types/admin-ingestion';
 import { Check, Loader2, AlertCircle, X, Plug } from 'lucide-react';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
-interface ConnectorSetupWizardProps {
-  templateId: string | null;
-  templates: ConnectorTemplate[];
-  onClose: () => void;
-  onSuccess: () => Promise<void>;
-}
-
-export default function ConnectorSetupWizard({
-  templateId,
-  templates,
   onClose,
   onSuccess
 }: ConnectorSetupWizardProps) {
